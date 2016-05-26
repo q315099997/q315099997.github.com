@@ -9,12 +9,15 @@ github blog page
 |"$err"     |错误号                  |
 
 HLS播放：
-|重点环节         |标准Log          |Player           |
-|-----------------|-----------------|-----------------|
-|播放器获取播放地址|setDataSource("$url")|[$session] setDataSource(url)|
-|播放器开始请求播放列表(M3U8)|fetchPlaylist starting("$url")|fetchPlaylist starting(url)|
-|播放器开始准备|["$session"] prepareAsync|[$session] prepareAsync|
-|播放器获取(M3U8)完成|fetchPlaylist done, 409:409 bytes cost 0.07s|fetchPlaylist done: cost 567MS|
+
+|重点环节                        |标准Log                                       |Player                          |
+|-------------------------------:|:------------------------------------------:|:--------------------------------:|
+|播放器获取播放地址              |setDataSource("$url")                       |[$session] setDataSource(url)     |
+|播放器开始请求播放列表(M3U8)    |fetchPlaylist starting("$url")              |fetchPlaylist starting(url)       |
+|播放器开始准备                  |["$session"] prepareAsync                   |[$session] prepareAsync           |
+|播放器获取(M3U8)完成            |fetchPlaylist done, 409:409 bytes cost 0.07s|fetchPlaylist done: cost 567MS    |
+
+
 |M3U8文件|#EXTM3U
 #EXT-X-VERSION:3
 #EXT-X-ALLOW-CACHE:YES
@@ -38,7 +41,13 @@ fetching ("$url")|fetching sequence 0, duration=2000ms, uri=http://10.154.250.32
 4,其他的如404错误等，之后的逻辑也是mSeqNumber++|fetch sequence 0, cost 679ms, size=1824352 Bytes, duration=2000ms|
 |播放器请求的ts分片SeqNum小于当前播放列表最小SeqNum|We've missed the boat, restarting playback, was looking for 1442897410 in 1442897414-1442897416|no，需要增加|
 |播放器请求的ts分片SeqNum大于当前播放列表最大SeqNum|sequence number high: 1442897417 from (1442897414..1442897416), refresh m3u8(retry=2)|no，需要增加|
-||||
+|播放器下载模块下载请求返回值|download ("$url") return ("$err") (strerror)|Unable to connect to:
+Http responseCode:
+failed to fetch sequence $Index, error:|
+|播放器缓冲中插入Discontinuity	|queueing discontinuity(DiscontinuityType)||
+|Video Decoder初始化|initiating video decoder|initiating Decoder(OMX.MTK.VIDEO.DECODER.AVC)|
+|Video Decoder初始化完成 |video decoder initialized|Decoder initialized(OMX.MTK.VIDEO.DECODER.AVC)|
+|Audio Decoder初始化|initiating audio decoder|initiating Decoder(OMX.google.aac.decoder)|
 ||||
 ||||
 ||||||||
